@@ -20,9 +20,9 @@ const displayEmptyListMsg = () => {
 
   localStorage.setItem('items', JSON.stringify([]));
 
-  itemList.style.display = 'none';
-  clearAllBtn.style.display = 'none';
-  filterItemsInput.style.display = 'none';
+  itemList.classList.add('hidden');
+  clearAllBtn.classList.add('hidden');
+  filterItemsInput.classList.add('hidden');
 
   if (!document.querySelector('.empty-message')) {
     document.querySelector('.container').insertBefore(message, itemList);
@@ -44,7 +44,7 @@ const createNewItem = (itemName) => {
 
   if (document.querySelector('.empty-message')) {
     document.querySelector('.empty-message').remove();
-    itemList.style.display = 'flex';
+    itemList.classList.remove('hidden');
   }
 
   itemList.appendChild(item);
@@ -82,15 +82,15 @@ enterItemInput.addEventListener('input', (event) => {
 filterItemsInput.addEventListener('input', (event) => {
   const filterValue = event.currentTarget.value.toLowerCase();
   itemList.querySelectorAll('li').forEach((item) => {
-    if (!item.textContent.toLowerCase().includes(filterValue)) {
-      item.style.display = 'none';
+    if (!item.firstChild.textContent.toLowerCase().includes(filterValue)) {
+      item.classList.add('hidden');
     } else {
-      item.style.display = 'flex';
+      item.classList.remove('hidden');
     }
   });
 
   const hasNoResults = Array.from(itemList.querySelectorAll('li')).every(
-    (item) => item.style.display === 'none'
+    (item) => item.classList.contains('hidden')
   );
 
   if (hasNoResults) {
@@ -115,7 +115,9 @@ addItemForm.addEventListener('submit', (event) => {
   if (enterItemInput.value !== '') {
     if (editMode) {
       const hasDuplicates = Array.from(itemList.querySelectorAll('li')).some(
-        (item) => item.textContent === enterItemInput.value
+        (item) =>
+          item.textContent === enterItemInput.value &&
+          selectedItem !== enterItemInput.value
       );
 
       if (hasDuplicates) {
@@ -159,8 +161,8 @@ addItemForm.addEventListener('submit', (event) => {
 
         enterItemInput.value = '';
         addItemBtn.setAttribute('disabled', true);
-        clearAllBtn.style.display = 'block';
-        filterItemsInput.style.display = 'inline-block';
+        clearAllBtn.classList.remove('hidden');
+        filterItemsInput.classList.remove('hidden');
       }
     }
   } else {
@@ -170,28 +172,30 @@ addItemForm.addEventListener('submit', (event) => {
 
 // Remove Item
 itemList.addEventListener('click', (event) => {
-  const parent = event.target.parentElement;
-  if (parent && parent.classList.contains('remove-item')) {
-    const value = parent.parentElement.textContent;
-    parent.parentElement.remove();
+  if (confirm('Are you sure?')) {
+    const parent = event.target.parentElement;
+    if (parent && parent.classList.contains('remove-item')) {
+      const value = parent.parentElement.textContent;
+      parent.parentElement.remove();
 
-    if (localStorage.getItem('items') !== null) {
-      const items = JSON.parse(localStorage.getItem('items'));
-      const index = items.findIndex((item) => item === value);
-      items.splice(index, 1);
-      localStorage.setItem('items', JSON.stringify(items));
+      if (localStorage.getItem('items') !== null) {
+        const items = JSON.parse(localStorage.getItem('items'));
+        const index = items.findIndex((item) => item === value);
+        items.splice(index, 1);
+        localStorage.setItem('items', JSON.stringify(items));
+      }
     }
-  }
 
-  if (itemList.childElementCount === 0) {
-    displayEmptyListMsg();
-  }
+    if (itemList.childElementCount === 0) {
+      displayEmptyListMsg();
+    }
 
-  editMode = false;
-  addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
-  enterItemInput.value = '';
-  selectedItem = null;
-  addItemBtn.setAttribute('disabled', true);
+    editMode = false;
+    addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
+    enterItemInput.value = '';
+    selectedItem = null;
+    addItemBtn.setAttribute('disabled', true);
+  }
 });
 
 // Select Item
@@ -206,7 +210,11 @@ itemList.addEventListener('click', (event) => {
 });
 
 // Remove All Items
-clearAllBtn.addEventListener('click', displayEmptyListMsg);
+clearAllBtn.addEventListener('click', () => {
+  if (confirm('Are you sure?')) {
+    displayEmptyListMsg();
+  }
+});
 
 // Populate Items
 window.addEventListener('DOMContentLoaded', () => {
