@@ -222,6 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (localStorage.getItem('items') === null) {
     localStorage.setItem('items', JSON.stringify([]));
+    items = [];
   } else {
     items = JSON.parse(localStorage.getItem('items'));
   }
