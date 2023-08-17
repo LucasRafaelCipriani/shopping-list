@@ -134,6 +134,7 @@ addItemForm.addEventListener('submit', (event) => {
 
       if (hasDuplicates) {
         alert('You already have an item with this name');
+        resetState();
       } else {
         updateItem(enterItemInput.value);
 
