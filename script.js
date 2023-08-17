@@ -76,14 +76,14 @@ const resetState = () => {
   itemList.querySelectorAll('li').forEach((item) => {
     item.style.color = '#000';
   });
-  addItemBtn.style.backgroundColor = '#333';
+  addItemBtn.removeAttribute('style');
   addItemBtn.setAttribute('disabled', true);
 };
 
 // Event Listeners
 // Disable Button If No Value On Input
 enterItemInput.addEventListener('input', (event) => {
-  if (event.target.value !== '') {
+  if (event.target.value.trim() !== '') {
     addItemBtn.removeAttribute('disabled');
   } else {
     addItemBtn.setAttribute('disabled', true);
