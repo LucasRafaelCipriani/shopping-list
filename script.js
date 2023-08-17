@@ -68,6 +68,18 @@ const updateItem = (newItemName) => {
   });
 };
 
+const resetState = () => {
+  editMode = false;
+  addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
+  enterItemInput.value = '';
+  selectedItem = null;
+  itemList.querySelectorAll('li').forEach((item) => {
+    item.style.color = '#000';
+  });
+  addItemBtn.style.backgroundColor = '#333';
+  addItemBtn.setAttribute('disabled', true);
+};
+
 // Event Listeners
 // Disable Button If No Value On Input
 enterItemInput.addEventListener('input', (event) => {
@@ -137,15 +149,7 @@ addItemForm.addEventListener('submit', (event) => {
           localStorage.setItem('items', JSON.stringify(newItems));
         }
 
-        editMode = false;
-        addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
-        enterItemInput.value = '';
-        selectedItem = null;
-        itemList.querySelectorAll('li').forEach((item) => {
-          item.style.color = '#000';
-        });
-        addItemBtn.style.backgroundColor = '#333';
-        addItemBtn.setAttribute('disabled', true);
+        resetState();
       }
     } else {
       const hasDuplicates = Array.from(itemList.querySelectorAll('li')).some(
@@ -195,15 +199,7 @@ itemList.addEventListener('click', (event) => {
     displayEmptyListMsg();
   }
 
-  editMode = false;
-  addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
-  enterItemInput.value = '';
-  selectedItem = null;
-  itemList.querySelectorAll('li').forEach((item) => {
-    item.style.color = '#000';
-  });
-  addItemBtn.style.backgroundColor = '#333';
-  addItemBtn.setAttribute('disabled', true);
+  resetState();
 });
 
 // Select Item
