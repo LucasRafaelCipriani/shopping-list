@@ -141,6 +141,10 @@ addItemForm.addEventListener('submit', (event) => {
         addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
         enterItemInput.value = '';
         selectedItem = null;
+        itemList.querySelectorAll('li').forEach((item) => {
+          item.style.color = '#000';
+        });
+        addItemBtn.style.backgroundColor = '#333';
         addItemBtn.setAttribute('disabled', true);
       }
     } else {
@@ -172,9 +176,9 @@ addItemForm.addEventListener('submit', (event) => {
 
 // Remove Item
 itemList.addEventListener('click', (event) => {
-  if (confirm('Are you sure?')) {
-    const parent = event.target.parentElement;
-    if (parent && parent.classList.contains('remove-item')) {
+  const parent = event.target.parentElement;
+  if (parent && parent.classList.contains('remove-item')) {
+    if (confirm('Are you sure?')) {
       const value = parent.parentElement.textContent;
       parent.parentElement.remove();
 
@@ -185,26 +189,35 @@ itemList.addEventListener('click', (event) => {
         localStorage.setItem('items', JSON.stringify(items));
       }
     }
-
-    if (itemList.childElementCount === 0) {
-      displayEmptyListMsg();
-    }
-
-    editMode = false;
-    addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
-    enterItemInput.value = '';
-    selectedItem = null;
-    addItemBtn.setAttribute('disabled', true);
   }
+
+  if (itemList.childElementCount === 0) {
+    displayEmptyListMsg();
+  }
+
+  editMode = false;
+  addItemBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
+  enterItemInput.value = '';
+  selectedItem = null;
+  itemList.querySelectorAll('li').forEach((item) => {
+    item.style.color = '#000';
+  });
+  addItemBtn.style.backgroundColor = '#333';
+  addItemBtn.setAttribute('disabled', true);
 });
 
 // Select Item
 itemList.addEventListener('click', (event) => {
   if (event.target.tagName === 'LI') {
+    itemList.querySelectorAll('li').forEach((item) => {
+      item.style.color = '#000';
+    });
     editMode = true;
+    event.target.style.color = '#ccc';
     selectedItem = event.target.textContent;
     enterItemInput.value = event.target.textContent;
-    addItemBtn.innerHTML = `<i class="fa-solid fa-pencil"></i> Update Item`;
+    addItemBtn.innerHTML = `<i class="fa-solid fa-pen"></i> Update Item`;
+    addItemBtn.style.backgroundColor = '#228B22';
     addItemBtn.removeAttribute('disabled');
   }
 });
